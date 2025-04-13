@@ -27,7 +27,7 @@ export default async function Home() {
           <div className="flex gap-4 items-center flex-col sm:flex-row">
             <Image
               // className="dark:invert"
-              src={session.user.image}
+              src={session.user.image ?? "/default-avatar.png"}
               alt="User Avatar"
               width={50}
               height={50}
