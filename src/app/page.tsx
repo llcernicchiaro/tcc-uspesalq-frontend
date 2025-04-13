@@ -34,11 +34,8 @@ export default async function Home() {
               priority
             />
             <h2 className="text-2xl font-semibold tracking-[-.01em]">
-              Signed in as {session.user.name}
+              Signed in as {session?.user?.name}
             </h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              {session.user.role}
-            </p>
             <form
               action={async () => {
                 "use server";
