@@ -4,9 +4,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, Users, User } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
 
 const navItems = [
-  { href: "/dashboard", icon: Home, label: "Dashboard" },
+  { href: "/dashboard", icon: Home, label: "Início" },
   { href: "/groups", icon: Users, label: "Grupos" },
   { href: "/profile", icon: User, label: "Perfil" },
 ];
@@ -15,28 +16,25 @@ export default function MobileNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-0 w-full bg-white border-t flex justify-around p-2 z-50">
-      {navItems.map(({ href, icon: Icon, label }) => (
-        <Link
-          key={href}
-          href={href}
-          className="flex flex-col items-center text-xs"
-        >
-          <Icon
+    <nav className="fixed bottom-0 w-full border-t bg-background z-50 flex justify-around items-center py-2 sm:hidden">
+      {navItems.map(({ href, icon: Icon, label }) => {
+        const isActive = pathname.startsWith(href);
+
+        return (
+          <Link
+            key={href}
+            href={href}
             className={cn(
-              "h-5 w-5",
-              pathname.startsWith(href) ? "text-blue-600" : "text-gray-400"
+              buttonVariants({ variant: "ghost", size: "icon" }),
+              "flex flex-col items-center justify-center text-xs gap-0.5",
+              isActive ? "text-primary" : "text-muted-foreground"
             )}
-          />
-          <span
-            className={
-              pathname.startsWith(href) ? "text-blue-600" : "text-gray-400"
-            }
           >
-            {label}
-          </span>
-        </Link>
-      ))}
+            <Icon className="h-5 w-5" />
+            <span className="text-xs">{label}</span>
+          </Link>
+        );
+      })}
     </nav>
   );
 }
