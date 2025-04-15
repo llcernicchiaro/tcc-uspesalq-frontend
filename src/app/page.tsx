@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
-import { subscribeUser, unsubscribeUser, sendNotification } from "./actions.ts";
+import { subscribeUser, unsubscribeUser, sendNotification } from "./actions";
 
 function urlBase64ToUint8Array(base64String: string) {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
