@@ -1,99 +1,100 @@
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardAction,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Lock, Unlock } from "lucide-react";
-import Image from "next/image";
+import { Lock, Unlock, Users } from "lucide-react";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Group } from "@/types/group";
+import { fetchGroups } from "@/lib/api";
+import { ErrorToast } from "@/components/ErrorToast";
+import { Separator } from "@/components/ui/separator";
 
-type Group = {
-  id: string;
-  name: string;
-  description?: string;
-  participantsCount: number;
-  isUserParticipant: boolean;
-  coverImageUrl: string;
-  isOpen: boolean;
-};
+export default async function GroupsPage() {
+  let groups: Group[] = [];
+  let errorMessage = "";
 
-const mockGroups: Group[] = [
-  {
-    id: "1",
-    name: "Equipe Corredores da Serra",
-    description: "Grupo focado em provas no sul do Brasil.",
-    participantsCount: 28,
-    isUserParticipant: true, // Altere para testar os dois estados
-    coverImageUrl: "https://lh3.googleusercontent.com/a/default-user", // 🔁 mock
-    isOpen: true,
-  },
-  {
-    id: "2",
-    name: "Equipe Corredores da Serra",
-    description: "Grupo focado em provas no sul do Brasil.",
-    participantsCount: 28,
-    isUserParticipant: true, // Altere para testar os dois estados
-    coverImageUrl: "https://lh3.googleusercontent.com/a/default-user", // 🔁 mock
-    isOpen: true,
-  },
-];
+  try {
+    groups = await fetchGroups();
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      errorMessage = err.message;
+    } else {
+      errorMessage = "An unknown error occurred.";
+    }
+  }
 
-export default function GroupsPage() {
   return (
     <div className="p-4 space-y-4">
-      <h1 className="text-xl font-semibold">Meus Grupos</h1>
-      <Button className="w-full" variant="outline">
-        + Criar novo grupo
-      </Button>
+      {errorMessage && <ErrorToast error={errorMessage} />}
+      <h1 className="text-xl font-semibold">Grupos</h1>
 
-      {mockGroups.map((group) => (
-        <Link key={group.id} href={`/groups/${group.id}/events`}>
-          <Card className="flex flex-col sm:flex-row items-center gap-4 border p-4 rounded-xl hover:bg-muted transition-colors">
-            {/* Imagem do Grupo */}
-            <div className="relative w-16 h-16 sm:w-12 sm:h-12">
-              <Image
-                src={group.coverImageUrl}
-                alt={`Imagem do grupo ${group.name}`}
-                fill
-                className="rounded-full object-cover"
-              />
-            </div>
-
-            {/* Informações do Grupo */}
-            <CardHeader className="flex-1">
-              <CardTitle className="font-semibold text-lg sm:text-xl">
-                {group.name}
-              </CardTitle>
-              <CardContent className="text-sm text-muted-foreground truncate">
-                {group.description}
-              </CardContent>
+      <div className="flex flex-row gap-2 mb-4 items-center justify-between">
+        <span className="text-xs text-muted-foreground">
+          Você pode criar um grupo
+          <br /> ou se juntar a um grupo existente.
+        </span>
+        <Link href="/groups/new">
+          <Button>Criar grupo</Button>
+        </Link>
+      </div>
+      <Separator />
+      {groups.map((group) => (
+        <Card
+          key={group.id}
+          className="gap-2 border p-2 rounded-xl hover:bg-muted transition-colors"
+        >
+          <Link href={`/groups/${group.id}/events`}>
+            <CardHeader className="flex flex-row items-center justify-between gap-2">
+              <div className="flex flex-row items-center gap-2">
+                <Avatar className="h-12 w-12">
+                  <AvatarImage
+                    src={group.imageUrl || undefined}
+                    alt={group.name}
+                  />
+                  <AvatarFallback>{group.name.charAt(0)}</AvatarFallback>
+                </Avatar>
+                <div>
+                  <CardTitle className="font-semibold text-lg">
+                    {group.name}
+                  </CardTitle>
+                  <span className="text-sm text-muted-foreground truncate">
+                    {group.description}
+                  </span>
+                </div>
+              </div>
+              <CardAction className="flex flex-col items-center justify-center">
+                <Badge
+                  variant={group.type === "open" ? "success" : "destructive"}
+                  className="rounded-full px-1 py-1 text-xs font-medium"
+                >
+                  {group.type === "open" ? (
+                    <Unlock className="w-4 h-4" />
+                  ) : (
+                    <Lock className="w-4 h-4" />
+                  )}
+                </Badge>
+                <div className="flex flex-row items-center py-2 gap-1 text-muted-foreground">
+                  <Users className="w-4 h-4" />
+                  <span className="text-sm">{group.membersCount}</span>
+                </div>
+              </CardAction>
             </CardHeader>
 
-            {/* Badge indicando se o grupo é aberto ou fechado */}
-            <div className="flex-shrink-0 mt-2 sm:mt-0">
-              <Badge
-                variant={group.isOpen ? "default" : "destructive"}
-                className="flex items-center gap-1"
-              >
-                {group.isOpen ? (
-                  <Unlock className="w-4 h-4" />
-                ) : (
-                  <Lock className="w-4 h-4" />
-                )}
-                {group.isOpen ? "Aberto" : "Fechado"}
-              </Badge>
-            </div>
-
-            {/* Botão de Participar ou Solicitar Acesso */}
-            {!group.isUserParticipant && (
-              <Button
-                size="sm"
-                variant={group.isOpen ? "default" : "secondary"}
-                className="text-sm mt-2"
-              >
-                {group.isOpen ? "Participar" : "Solicitar acesso"}
-              </Button>
-            )}
-          </Card>
-        </Link>
+            <CardFooter>
+              {!group.role && (
+                <Button size="sm" className="text-sm mt-2 w-full">
+                  {group.type === "open" ? "Participar" : "Pedir para entrar"}
+                </Button>
+              )}
+            </CardFooter>
+          </Link>
+        </Card>
       ))}
     </div>
   );

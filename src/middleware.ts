@@ -9,11 +9,5 @@ export default auth((req) => {
 
 // Definindo quais rotas devem ser protegidas
 export const config = {
-  matcher: [
-    "/dashboard",
-    "/groups/:path*",
-    "/profile",
-    "/trainings/:path*",
-    "/events/:path*",
-  ],
+  matcher: ["/dashboard", "/groups/:path*", "/profile"],
 };
