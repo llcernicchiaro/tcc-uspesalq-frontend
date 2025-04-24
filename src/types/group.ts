@@ -14,8 +14,9 @@ export const GroupSchema = z.object({
       z.object({
         id: z.string(),
         name: z.string(),
-        imageUrl: z.string().url().optional(),
-        role: z.enum(["admin", "member"]),
+        email: z.string().email(),
+        picture: z.string().url().optional(),
+        role: z.enum(["admin", "participant"]),
       })
     )
     .optional(),
