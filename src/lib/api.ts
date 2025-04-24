@@ -3,6 +3,7 @@ import { Group } from "@/types/group";
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+// To use in the server side
 const fetchWrapper = async (url: string, options?: RequestInit) => {
   const session = await auth();
 
@@ -43,9 +44,8 @@ export const fetchGroupById = (id: string): Promise<Group> =>
   fetchWrapper(`${API_URL}/group/${id}`);
 
 export const fetchMyGroups = (): Promise<Group[]> =>
-  fetchWrapper(`${API_URL}/group/mine`);
+  fetchWrapper(`${API_URL}/groups/mine`);
 
 // Events
-
 export const fetchNextEvents = (): Promise<Group[]> =>
   fetchWrapper(`${API_URL}/events/next`);

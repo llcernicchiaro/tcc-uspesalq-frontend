@@ -76,7 +76,10 @@ export default function CreateGroupPage() {
       headers: { "Content-Type": selectedImage.type },
     });
 
-    if (!uploadRes.ok) throw new Error("Erro ao enviar imagem");
+    if (!uploadRes.ok) {
+      toast.error("Erro ao enviar imagem");
+      return;
+    }
 
     return fileUrl;
   };
@@ -110,9 +113,9 @@ export default function CreateGroupPage() {
 
       if (!res.ok) throw new Error("Erro ao criar grupo");
 
-      const { id } = await res.json();
+      const { group } = await res.json();
       toast.success("Grupo criado com sucesso!");
-      router.push(`/groups/${id}`);
+      router.push(`/groups/${group.id}/events`);
     } catch (err) {
       toast.error("Erro ao criar grupo");
       console.error(err);
@@ -147,13 +150,15 @@ export default function CreateGroupPage() {
           <Textarea id="description" {...register("description")} />
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-4">
           <Label>Tipo de grupo</Label>
           <RadioGroup
             value={selectedType}
-            onValueChange={(value) => setValue("type", value as "open" | "closed")}
+            onValueChange={(value) =>
+              setValue("type", value as "open" | "closed")
+            }
             defaultValue="open"
-            className="flex gap-4"
+            className="flex gap-6"
           >
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="open" id="open" />
@@ -169,7 +174,7 @@ export default function CreateGroupPage() {
           )}
         </div>
 
-        <Button type="submit" disabled={loading}>
+        <Button className="w-full" type="submit" disabled={loading}>
           {loading ? "Criando..." : "Criar grupo"}
         </Button>
       </form>

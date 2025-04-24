@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/sonner";
 
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
+import { SWRProvider } from "@/providers/SWRProvider";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const poppins = Poppins({
@@ -32,7 +33,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <SessionProvider>{children}</SessionProvider>
+          <SessionProvider>
+            <SWRProvider>{children}</SWRProvider>
+          </SessionProvider>
           <Toaster position="top-center" richColors />
         </ThemeProvider>
       </body>

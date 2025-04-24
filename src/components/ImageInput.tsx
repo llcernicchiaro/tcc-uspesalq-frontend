@@ -63,6 +63,7 @@ export const ImageUpload = ({ onUpload }: Props) => {
               src={previewUrl}
               alt="Preview"
               fill
+              sizes="100%"
               className="object-cover"
             />
           </div>

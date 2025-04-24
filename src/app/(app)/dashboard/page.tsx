@@ -3,7 +3,7 @@ import { Bell } from "lucide-react";
 import { Suspense } from "react";
 
 import { auth } from "@/auth";
-import { fetchGroups } from "@/lib/api";
+import { fetchMyGroups } from "@/lib/api";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -16,6 +16,7 @@ import { ErrorToast } from "@/components/ErrorToast";
 
 import type { Group } from "@/types/group";
 import EmptyGroupList from "@/components/EmptyGroupList";
+import GroupCard from "@/components/GroupCard";
 
 export default async function Dashboard() {
   const session = await auth();
@@ -24,7 +25,7 @@ export default async function Dashboard() {
   let errorMessage = "";
 
   try {
-    groups = await fetchGroups();
+    groups = await fetchMyGroups();
   } catch (err: unknown) {
     if (err instanceof Error) {
       errorMessage = err.message;
@@ -53,8 +54,6 @@ export default async function Dashboard() {
       groupId: "1",
     },
   ];
-
-  console.log(groups);
 
   return (
     <div className="p-4 space-y-6">
@@ -112,7 +111,6 @@ export default async function Dashboard() {
 
         <Separator />
 
-        {/* Seção de grupos */}
         <Suspense
           fallback={<Skeleton className="w-[100px] h-[20px] rounded-full" />}
         >
@@ -122,27 +120,7 @@ export default async function Dashboard() {
               {groups.length === 0 && <EmptyGroupList />}
               {groups.length > 0 &&
                 groups.map((group) => (
-                  <Card key={group.id}>
-                    <Link href={`/groups/${group.id}/events`}>
-                      <CardContent className="p-3 flex gap-3 items-center">
-                        <Avatar className="h-12 w-12">
-                          <AvatarImage
-                            src={group.imageUrl || undefined}
-                            alt={group.name}
-                          />
-                          <AvatarFallback>
-                            {group.name.charAt(0)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="font-medium">{group.name}</p>
-                          <p className="text-sm text-muted-foreground">
-                            {group.membersCount} participantes
-                          </p>
-                        </div>
-                      </CardContent>
-                    </Link>
-                  </Card>
+                  <GroupCard key={group.id} group={group} />
                 ))}
             </div>
           </section>
