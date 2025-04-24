@@ -17,7 +17,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { ImageUpload } from "@/components/ImageInput";
 
-export const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const groupSchema = z.object({
   name: z.string().min(3, "O nome precisa ter pelo menos 3 caracteres"),

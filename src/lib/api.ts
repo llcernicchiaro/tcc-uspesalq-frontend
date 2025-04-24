@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
 import { Group } from "@/types/group";
 
-export const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 // To use in the server side
 const fetchWrapper = async (url: string, options?: RequestInit) => {
