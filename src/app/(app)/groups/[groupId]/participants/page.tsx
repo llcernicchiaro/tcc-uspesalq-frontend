@@ -4,11 +4,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useGroup } from "@/hooks/useGroup";
 import { UserX } from "lucide-react";
-import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
 
 export default function ParticipantsPage() {
-  const { data } = useSession();
   const params = useParams();
   const groupId = params.groupId;
 

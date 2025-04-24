@@ -52,13 +52,13 @@ export const GroupCardContent: React.FC<{
     </CardHeader>
 
     <CardFooter>
-      {!group.role && (
+      {!group.isMember && !onlyContent && (
         <Button
           size="sm"
           className="text-sm mt-2 w-full"
           variant={group.isMember ? "outline" : "default"}
         >
-          {group.isMember && !onlyContent
+          {group.isMember || group.role
             ? "Acessar"
             : group.type === "open"
             ? "Participar"

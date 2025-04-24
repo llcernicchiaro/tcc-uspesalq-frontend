@@ -6,7 +6,7 @@ export const GroupSchema = z.object({
   description: z.string(),
   imageUrl: z.string().url().optional(),
   membersCount: z.number().optional(),
-  role: z.enum(["admin", "member"]).optional(),
+  role: z.enum(["admin", "participant"]).optional(),
   type: z.enum(["open", "closed"]),
   isMember: z.boolean().optional(),
   members: z
