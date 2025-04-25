@@ -1,44 +1,40 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { useGetGroup } from "@/hooks/useGetGroup";
-import { UserX } from "lucide-react";
+import { GroupMembersTable } from "@/components/GroupMembersTable";
+import { useGroupMembers } from "@/hooks/useGroupMembers";
 import { useParams } from "next/navigation";
 
 export default function ParticipantsPage() {
   const params = useParams();
   const groupId = params.groupId;
 
-  const { group } = useGetGroup(groupId as string);
+  const { data, isLoading, isError } = useGroupMembers(groupId as string);
 
   return (
-    <div className="p-4 space-y-4">
-      {(group?.members ?? []).map((user) => (
-        <div key={user.userId} className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Avatar>
-              <AvatarImage src={user.picture} />
-              <AvatarFallback>{user.name[0]}</AvatarFallback>
-            </Avatar>
-            <div className="text-sm">
-              <p className="font-medium">{user.name}</p>
-              <p className="text-muted-foreground text-xs">{user.email}</p>
-              {user.role === "admin" && (
-                <span className="text-xs text-blue-500">Admin</span>
-              )}
-            </div>
-          </div>
+    <div className="space-y-4">
+      {isLoading && <p>Carregando...</p>}
+      {isError && <p>Erro ao carregar os membros do grupo</p>}
+      {data && (
+        <>
+          <h2 className="text-lg font-semibold">Membros</h2>
+          <GroupMembersTable
+            members={data?.active ?? []}
+            groupId={groupId as string}
+            variant="active"
+          />
 
-          {user.role !== "admin" && (
-            <div className="flex gap-2">
-              <Button size="sm" variant="destructive">
-                <UserX className="h-4 w-4" />
-              </Button>
+          {data?.isClosed && (
+            <div>
+              <h2 className="text-lg font-semibold">Membros pendentes</h2>
+              <GroupMembersTable
+                members={data?.pending ?? []}
+                groupId={groupId as string}
+                variant="pending"
+              />
             </div>
           )}
-        </div>
-      ))}
+        </>
+      )}
     </div>
   );
 }

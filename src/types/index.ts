@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const UserSchema = z.object({
+export const UserSchema = z.object({
   userId: z.string(),
   name: z.string(),
   email: z.string().email(),
@@ -8,7 +8,11 @@ const UserSchema = z.object({
   role: z.enum(["admin", "participant"]),
 });
 
-const EventSchema = z.object({
+export const MemberSchema = UserSchema.extend({
+  memberSince: z.string().datetime(),
+});
+
+export const EventSchema = z.object({
   eventId: z.string(),
   name: z.string(),
   description: z.string(),
@@ -30,4 +34,17 @@ export const GroupSchema = z.object({
   events: z.array(EventSchema).optional(),
 });
 
+export const GroupMembershipSchema = z.object({
+  id: z.string(),
+  userId: z.string(),
+  groupId: z.string(),
+  status: z.enum(["pending", "accepted", "rejected"]),
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
+});
+
+export type GroupMembership = z.infer<typeof GroupMembershipSchema>;
 export type Group = z.infer<typeof GroupSchema>;
+export type User = z.infer<typeof UserSchema>;
+export type Event = z.infer<typeof EventSchema>;
+export type Member = z.infer<typeof MemberSchema>;

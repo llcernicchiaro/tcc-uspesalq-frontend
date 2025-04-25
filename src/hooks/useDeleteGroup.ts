@@ -28,7 +28,7 @@ export const useDeleteGroup = () => {
   };
 
   const { trigger, isMutating, error } = useSWRMutation(
-    `${process.env.NEXT_PUBLIC_API_URL}/group`,
+    `${process.env.NEXT_PUBLIC_API_URL}/groups`,
     fetcher
   );
 

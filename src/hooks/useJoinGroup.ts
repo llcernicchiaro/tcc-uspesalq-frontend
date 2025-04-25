@@ -9,7 +9,7 @@ export const useJoinGroup = () => {
   const router = useRouter();
 
   const fetcher = async (url: string, { arg: groupId }: { arg: string }) => {
-    const response = await fetch(`${url}/groups/${groupId}/join`, {
+    const response = await fetch(`${url}/groups/${groupId}/memberships/join`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${session?.accessToken}`,
@@ -28,7 +28,7 @@ export const useJoinGroup = () => {
   };
 
   const { trigger, isMutating, error } = useSWRMutation(
-    `${process.env.NEXT_PUBLIC_API_URL}`,
+    process.env.NEXT_PUBLIC_API_URL,
     fetcher
   );
 

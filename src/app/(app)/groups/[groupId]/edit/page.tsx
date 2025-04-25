@@ -98,7 +98,7 @@ export default function EditGroupForm() {
         imageUrl = fileUrl;
       }
 
-      const response = await fetch(`${API_URL}/group/${groupId}`, {
+      const response = await fetch(`${API_URL}/groups/${groupId}`, {
         method: "PATCH",
         body: JSON.stringify({
           ...data,
