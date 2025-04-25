@@ -14,7 +14,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ModeToggle } from "@/components/ui/mode-toogle";
 import { ErrorToast } from "@/components/ErrorToast";
 
-import type { Group } from "@/types/group";
+import type { Group } from "@/types";
 import EmptyGroupList from "@/components/EmptyGroupList";
 import GroupCard from "@/components/GroupCard";
 

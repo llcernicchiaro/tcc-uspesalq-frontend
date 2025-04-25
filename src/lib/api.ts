@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { Group } from "@/types/group";
+import { Group } from "@/types";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 

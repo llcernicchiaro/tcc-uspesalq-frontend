@@ -2,7 +2,7 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { useGroup } from "@/hooks/useGroup";
+import { useGetGroup } from "@/hooks/useGetGroup";
 import { UserX } from "lucide-react";
 import { useParams } from "next/navigation";
 
@@ -10,12 +10,12 @@ export default function ParticipantsPage() {
   const params = useParams();
   const groupId = params.groupId;
 
-  const { group } = useGroup(groupId as string);
+  const { group } = useGetGroup(groupId as string);
 
   return (
     <div className="p-4 space-y-4">
       {(group?.members ?? []).map((user) => (
-        <div key={user.id} className="flex items-center justify-between">
+        <div key={user.userId} className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Avatar>
               <AvatarImage src={user.picture} />

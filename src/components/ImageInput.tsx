@@ -8,13 +8,16 @@ import Image from "next/image";
 
 type Props = {
   onUpload: (file: File, previewUrl: string) => void;
+  initialUrl?: string;
 };
 
 const MAX_SIZE = 2 * 1024 * 1024; // 2MB
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
-export const ImageUpload = ({ onUpload }: Props) => {
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+export const ImageInput = ({ onUpload, initialUrl }: Props) => {
+  const [previewUrl, setPreviewUrl] = useState<string | null>(
+    initialUrl || null
+  );
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 

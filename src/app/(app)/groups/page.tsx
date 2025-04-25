@@ -3,9 +3,10 @@ import Link from "next/link";
 import { ErrorToast } from "@/components/ErrorToast";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { Group } from "@/types/group";
+import { Group } from "@/types";
 import { fetchGroups } from "@/lib/api";
 import GroupCard from "@/components/GroupCard";
+import { Plus } from "lucide-react";
 
 export default async function GroupsPage() {
   let groups: Group[] = [];
@@ -32,7 +33,10 @@ export default async function GroupsPage() {
           <br /> ou se juntar a um grupo existente.
         </span>
         <Link href="/groups/new">
-          <Button>Criar grupo</Button>
+          <Button>
+            <Plus />
+            Criar grupo
+          </Button>
         </Link>
       </div>
       <Separator />

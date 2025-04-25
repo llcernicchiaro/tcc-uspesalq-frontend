@@ -1,7 +1,8 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -12,10 +13,8 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
-import { useSession } from "next-auth/react";
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
-import { ImageUpload } from "@/components/ImageInput";
+import { ImageInput } from "@/components/ImageInput";
+import BackButton from "@/components/BackButton";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -111,13 +110,13 @@ export default function CreateGroupPage() {
         },
       });
 
-      if (!res.ok) throw new Error("Erro ao criar grupo");
+      if (!res.ok) throw new Error("Erro ao criar o grupo");
 
       const { group } = await res.json();
       toast.success("Grupo criado com sucesso!");
       router.push(`/groups/${group.id}/events`);
     } catch (err) {
-      toast.error("Erro ao criar grupo");
+      toast.error("Erro ao criar o grupo");
       console.error(err);
     } finally {
       setLoading(false);
@@ -126,16 +125,10 @@ export default function CreateGroupPage() {
 
   return (
     <div className="p-4 space-y-4">
-      <div className="flex items-center justify-between">
-        <Button variant="ghost" size="icon" asChild>
-          <Link href="/groups">
-            <ArrowLeft className="h-5 w-5" />
-          </Link>
-        </Button>
-      </div>
+      <BackButton />
       <h1 className="text-xl font-semibold">Criar novo grupo</h1>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        <ImageUpload onUpload={(file) => setSelectedImage(file)} />
+        <ImageInput onUpload={(file) => setSelectedImage(file)} />
 
         <div className="space-y-2">
           <Label htmlFor="name">Nome do grupo</Label>
