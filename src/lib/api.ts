@@ -44,7 +44,7 @@ export const fetchGroupById = (id: string): Promise<Group> =>
   fetchWrapper(`${API_URL}/groups/${id}`);
 
 export const fetchMyGroups = (): Promise<Group[]> =>
-  fetchWrapper(`${API_URL}/groups/mine`);
+  fetchWrapper(`${API_URL}/users/me/groups`);
 
 // Events
 export const fetchNextEvents = (): Promise<Group[]> =>

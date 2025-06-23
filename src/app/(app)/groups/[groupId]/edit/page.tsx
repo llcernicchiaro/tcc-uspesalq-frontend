@@ -6,7 +6,9 @@ import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useParams, useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
+import { ImageInput } from "@/components/ImageInput";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -17,9 +19,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+
 import { useGetGroup } from "@/hooks/useGetGroup";
-import { ImageInput } from "@/components/ImageInput";
-import { useSession } from "next-auth/react";
+import { useUploadImage } from "@/hooks/useUploadImage";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -34,6 +36,7 @@ type FormValues = z.infer<typeof schema>;
 export default function EditGroupForm() {
   const { data: session } = useSession();
   const params = useParams();
+  const { uploadImage } = useUploadImage();
   const groupId = params.groupId;
   const router = useRouter();
   const { group, isLoading } = useGetGroup(groupId as string);
@@ -73,29 +76,7 @@ export default function EditGroupForm() {
       }
 
       if (selectedImage) {
-        const res = await fetch(`${API_URL}/groups/upload-url`, {
-          method: "POST",
-          body: JSON.stringify({ fileType: selectedImage.type }),
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-
-        const { uploadUrl, fileUrl } = await res.json();
-
-        const uploadRes = await fetch(uploadUrl, {
-          method: "PUT",
-          body: selectedImage,
-          headers: { "Content-Type": selectedImage.type },
-        });
-
-        if (!uploadRes.ok) {
-          toast.error("Erro ao enviar imagem");
-          return;
-        }
-
-        imageUrl = fileUrl;
+        imageUrl = await uploadImage(selectedImage, "group");
       }
 
       const response = await fetch(`${API_URL}/groups/${groupId}`, {

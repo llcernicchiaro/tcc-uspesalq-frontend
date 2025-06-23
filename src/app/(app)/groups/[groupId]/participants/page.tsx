@@ -1,6 +1,6 @@
 "use client";
 
-import { GroupMembersTable } from "@/components/GroupMembersTable";
+import { MembersCardList } from "@/components/MembersCardList";
 import { useGroupMembers } from "@/hooks/useGroupMembers";
 import { useParams } from "next/navigation";
 
@@ -17,16 +17,16 @@ export default function ParticipantsPage() {
       {data && (
         <>
           <h2 className="text-lg font-semibold">Membros</h2>
-          <GroupMembersTable
+          <MembersCardList
             members={data?.active ?? []}
             groupId={groupId as string}
             variant="active"
           />
 
           {data?.isClosed && (
-            <div>
+            <div className="space-y-4">
               <h2 className="text-lg font-semibold">Membros pendentes</h2>
-              <GroupMembersTable
+              <MembersCardList
                 members={data?.pending ?? []}
                 groupId={groupId as string}
                 variant="pending"

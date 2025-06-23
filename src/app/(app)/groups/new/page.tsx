@@ -15,6 +15,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { ImageInput } from "@/components/ImageInput";
 import BackButton from "@/components/BackButton";
+import { useUploadImage } from "@/hooks/useUploadImage";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -29,6 +30,7 @@ type GroupFormData = z.infer<typeof groupSchema>;
 
 export default function CreateGroupPage() {
   const { data: session } = useSession();
+  const { uploadImage } = useUploadImage();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -48,41 +50,6 @@ export default function CreateGroupPage() {
 
   const selectedType = watch("type");
 
-  const handleImage = async (selectedImage: File) => {
-    const accessToken = session?.accessToken;
-
-    if (!accessToken) {
-      toast.error("Erro ao criar grupo");
-      return;
-    }
-
-    if (!selectedImage) return;
-
-    const presignRes = await fetch(`${API_URL}/groups/upload-url`, {
-      method: "POST",
-      body: JSON.stringify({ fileType: selectedImage.type }),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-
-    const { uploadUrl, fileUrl } = await presignRes.json();
-
-    const uploadRes = await fetch(uploadUrl, {
-      method: "PUT",
-      body: selectedImage,
-      headers: { "Content-Type": selectedImage.type },
-    });
-
-    if (!uploadRes.ok) {
-      toast.error("Erro ao enviar imagem");
-      return;
-    }
-
-    return fileUrl;
-  };
-
   const onSubmit = async (data: GroupFormData) => {
     setLoading(true);
 
@@ -98,7 +65,7 @@ export default function CreateGroupPage() {
       let imageUrl: string | undefined = undefined;
 
       if (selectedImage) {
-        imageUrl = await handleImage(selectedImage);
+        imageUrl = await uploadImage(selectedImage, "group");
       }
 
       const res = await fetch(`${API_URL}/group`, {
@@ -107,6 +74,10 @@ export default function CreateGroupPage() {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type, Authorization",
+          "Access-Control-Allow-Credentials": "true",
         },
       });
 

@@ -18,7 +18,7 @@ export const useUpdateMembership = () => {
     const { groupId, userId, ...body } = arg;
 
     const response = await fetch(
-      `${url}/${groupId}/memberships/${userId}/status`,
+      `${url}/${groupId}/memberships/${userId}`,
       {
         method: "PATCH",
         headers: {

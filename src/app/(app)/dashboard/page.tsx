@@ -41,17 +41,38 @@ export default async function Dashboard() {
   const mockEvents = [
     {
       id: "1",
-      name: "Corrida na Orla",
-      date: "2025-04-20",
-      image: "/images/event1.jpg",
-      groupId: "1",
+      name: "Corrida pelo título",
+      date: "26 de junho - 13:00", 
+      image: "https://www.gaveanews.com/wp-content/uploads/Bandeira-do-Gremio.webp",
+      groupName: "Gremistas",
     },
     {
       id: "2",
-      name: "Treino Funcional",
-      date: "2025-04-25",
-      image: "/images/event2.jpg",
-      groupId: "1",
+      name: "Corrida de São João",
+      date: "30 de junho - 15:00",
+      image: "https://blog.ciaathletica.com.br/wp-content/uploads/2020/05/Grupo-de-corrida-4-segredos-para-escolher-o-seu-2.png",
+      groupName: "Amigos que correm",
+    },
+  ];
+
+  const mockGroups = [
+    {
+      id: "1",
+      name: "Amigos que correm",
+      description: "Grupo de amigos que gostam de correr juntos",
+      imageUrl: "https://blog.ciaathletica.com.br/wp-content/uploads/2020/05/Grupo-de-corrida-4-segredos-para-escolher-o-seu-2.png",
+      type: "open",
+      membersCount: 10,
+      isMember: true,
+    },
+    {
+      id: "2",
+      name: "Gremistas",
+      description: "Grupo de corridas do Grêmio",
+      imageUrl: "https://www.gaveanews.com/wp-content/uploads/Bandeira-do-Gremio.webp",
+      type: "closed",
+      membersCount: 50,
+      isMember: true,
     },
   ];
 
@@ -99,7 +120,10 @@ export default async function Dashboard() {
                     <div>
                       <p className="font-medium">{event.name}</p>
                       <p className="text-sm text-muted-foreground">
-                        {new Date(event.date).toLocaleDateString()}
+                        {event.groupName}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {event.date}
                       </p>
                     </div>
                   </CardContent>
@@ -117,9 +141,9 @@ export default async function Dashboard() {
           <section>
             <h2 className="text-xl font-semibold mb-2">Meus Grupos</h2>
             <div className="space-y-3">
-              {groups.length === 0 && <EmptyGroupList />}
-              {groups.length > 0 &&
-                groups.map((group) => (
+              {mockGroups.length === 0 && <EmptyGroupList />}
+              {mockGroups.length > 0 &&
+                mockGroups.map((group) => (
                   <GroupCard key={group.id} group={group} />
                 ))}
             </div>

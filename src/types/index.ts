@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const UserSchema = z.object({
-  userId: z.string(),
+  id: z.string(),
   name: z.string(),
   email: z.string().email(),
   picture: z.string().url().optional(),
@@ -32,13 +32,14 @@ export const GroupSchema = z.object({
   isMember: z.boolean().optional(),
   members: z.array(UserSchema).optional(),
   events: z.array(EventSchema).optional(),
+  status: z.enum(["active", "pending", "inactive"]).optional(),
 });
 
 export const GroupMembershipSchema = z.object({
   id: z.string(),
   userId: z.string(),
   groupId: z.string(),
-  status: z.enum(["pending", "accepted", "rejected"]),
+  status: z.enum(["active", "pending", "inactive"]),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
 });

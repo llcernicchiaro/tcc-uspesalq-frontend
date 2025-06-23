@@ -5,6 +5,8 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       new URL("https://lh3.googleusercontent.com/**"),
       new URL("https://group-image-bucket-lorenzotcc.s3.amazonaws.com/**"),
+      new URL("https://blog.ciaathletica.com.br/**"),
+      new URL("https://www.gaveanews.com/**"),
     ],
   },
   headers: async () => {

@@ -19,10 +19,19 @@ import { useJoinGroup } from "@/hooks/useJoinGroup";
 
 export const GroupCardContent: React.FC<{
   group: Group;
-  onlyContent?: boolean;
-}> = ({ group, onlyContent }) => {
+}> = ({ group }) => {
   const router = useRouter();
   const { joinGroup, isJoining } = useJoinGroup();
+
+  const toJoin =
+    group.type === "open" ? "Entrar no grupo" : "Pedir para entrar";
+  const statusMap = {
+    active: "Abrir o grupo",
+    pending: "Seu convite está pendente",
+    inactive: "",
+  };
+
+  const buttonText = group.status ? statusMap[group.status] : toJoin;
 
   const handleAction = async () => {
     if (group.isMember) {
@@ -32,7 +41,7 @@ export const GroupCardContent: React.FC<{
     }
 
     try {
-      await joinGroup(group.id);
+      await joinGroup(group);
     } catch (error) {
       console.error("Erro ao entrar no grupo", error);
     }
@@ -50,7 +59,7 @@ export const GroupCardContent: React.FC<{
             <CardTitle className="font-semibold text-lg">
               {group.name}
             </CardTitle>
-            <span className="text-sm text-muted-foreground truncate">
+            <span className="text-sm text-muted-foreground">
               {group.description}
             </span>
           </div>
@@ -72,20 +81,16 @@ export const GroupCardContent: React.FC<{
           </div>
         </CardAction>
       </CardHeader>
-      {!group.isMember && !onlyContent && (
+      {!group.isMember && (
         <CardFooter>
           <Button
             size="sm"
             className="text-sm mt-2 w-full"
             variant={group.isMember ? "outline" : "default"}
-            disabled={isJoining}
+            disabled={isJoining || group.status === "pending"}
             onClick={handleAction}
           >
-            {group.isMember || group.role
-              ? "Acessar"
-              : group.type === "open"
-              ? "Participar"
-              : "Pedir para participar"}
+            {buttonText}
           </Button>
         </CardFooter>
       )}

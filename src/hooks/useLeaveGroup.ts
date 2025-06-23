@@ -9,8 +9,8 @@ export const useLeaveGroup = () => {
   const router = useRouter();
 
   const fetcher = async (url: string, { arg: groupId }: { arg: string }) => {
-    const response = await fetch(`${url}/groups/${groupId}/memberships/leave`, {
-      method: "POST",
+    const response = await fetch(`${url}/groups/${groupId}/memberships`, {
+      method: "DELETE",
       headers: {
         Authorization: `Bearer ${session?.accessToken}`,
         "Content-Type": "application/json",

@@ -23,9 +23,8 @@ export default function GroupLayout({
   const { group, isError, isLoading } = useGetGroup(groupId as string);
 
   const activeTab =
-    ["events", "participants", "performance"].find((tab) =>
-      pathname.includes(tab)
-    ) || "events";
+    ["events", "participants"].find((tab) => pathname.includes(tab)) ||
+    "events";
 
   return (
     <div className="p-4 space-y-4">
@@ -38,29 +37,30 @@ export default function GroupLayout({
       ) : (
         group && (
           <>
-            <GroupCardContent group={group} onlyContent />
-
-            <div>
-              <Separator />
-              <div className="flex items-center mt-3 space-x-2">
-                <p className="flex-3 text-sm text-muted-foreground ml-2">
-                  Área {group.role === "admin" ? "do admin" : "do membro"}:
-                </p>
-                <div className="space-x-3">
-                  <LeaveGroupButton groupId={groupId as string} />
-                  {group.role === "admin" && (
-                    <>
-                      <Link href={`/groups/${groupId}/edit`}>
-                        <Button variant="outline" size="sm">
-                          <Edit />
-                        </Button>
-                      </Link>
-                      <DeleteGroupButton groupId={groupId as string} />
-                    </>
-                  )}
+            <GroupCardContent group={group} />
+            {group.role && group.status !== "pending" && (
+              <div>
+                <Separator />
+                <div className="flex items-center mt-3 space-x-2">
+                  <p className="flex-3 text-sm text-muted-foreground ml-2">
+                    Área {group.role === "admin" ? "do admin" : "do membro"}:
+                  </p>
+                  <div className="space-x-3">
+                    <LeaveGroupButton groupId={groupId as string} />
+                    {group.role === "admin" && (
+                      <>
+                        <Link href={`/groups/${groupId}/edit`}>
+                          <Button variant="outline" size="sm">
+                            <Edit />
+                          </Button>
+                        </Link>
+                        <DeleteGroupButton groupId={groupId as string} />
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             <Tabs value={activeTab} className="w-full">
               <TabsList className="grid grid-cols-3">
@@ -70,11 +70,6 @@ export default function GroupLayout({
                 <TabsTrigger value="participants">
                   <Link href={`/groups/${groupId}/participants`}>
                     Participantes
-                  </Link>
-                </TabsTrigger>
-                <TabsTrigger value="performance">
-                  <Link href={`/groups/${groupId}/performance`}>
-                    Desempenho
                   </Link>
                 </TabsTrigger>
               </TabsList>

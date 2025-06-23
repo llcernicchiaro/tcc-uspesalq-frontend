@@ -3,13 +3,14 @@ import { useRouter } from "next/navigation";
 import useSWRMutation from "swr/mutation";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
+import { Group } from "@/types";
 
 export const useJoinGroup = () => {
   const { data: session } = useSession();
   const router = useRouter();
 
-  const fetcher = async (url: string, { arg: groupId }: { arg: string }) => {
-    const response = await fetch(`${url}/groups/${groupId}/memberships/join`, {
+  const fetcher = async (url: string, { arg: group }: { arg: Group }) => {
+    const response = await fetch(`${url}/groups/${group.id}/memberships`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${session?.accessToken}`,
@@ -22,9 +23,13 @@ export const useJoinGroup = () => {
       throw new Error("Erro ao entrar no grupo");
     }
 
-    toast.success("Você entrou no grupo com sucesso!");
+    toast.success(
+      group.type === "open"
+        ? "Você entrou no grupo com sucesso!"
+        : "Seu pedido para entrar no grupo foi enviado com sucesso!"
+    );
     mutate(`${process.env.NEXT_PUBLIC_API_URL}/groups`);
-    router.push(`/groups/${groupId}`);
+    router.push(`/groups/${group.id}/events`);
   };
 
   const { trigger, isMutating, error } = useSWRMutation(
@@ -33,7 +38,7 @@ export const useJoinGroup = () => {
   );
 
   return {
-    joinGroup: (groupId: string) => trigger(groupId),
+    joinGroup: (group: Group) => trigger(group),
     isJoining: isMutating,
     isError: !!error,
   };
